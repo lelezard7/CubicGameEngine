@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="open_project">icons/open_project.png</file>
+        <file alias="new_project">icons/new_project.png</file>
+        <file alias="save_project">icons/save_project.png</file>
+        <file alias="exit">icons/exit.png</file>
+        <file alias="circle">icons/circle.png</file>
+        <file alias="cube">icons/cube.png</file>
+        <file alias="cylinder">icons/cylinder.png</file>
+        <file alias="point">icons/point.png</file>
+        <file alias="pyramid">icons/pyramid.png</file>
+        <file alias="sphere">icons/sphere.png</file>
+        <file alias="square">icons/square.png</file>
+        <file alias="torus">icons/torus.png</file>
+        <file alias="triangle">icons/triangle.png</file>
+        <file alias="polygon">icons/polygon.png</file>
+        <file alias="text">icons/text.png</file>
+        <file alias="compile">icons/compile.png</file>
+        <file alias="run">icons/run.png</file>
+        <file alias="line">icons/line.png</file>
+        <file alias="debug">icons/debug.png</file>
+        <file alias="error">icons/error.png</file>
+        <file alias="warning">icons/warning.png</file>
+        <file alias="flashlight">icons/flashlight.png</file>
+        <file alias="light_bulb">icons/light_bulb.png</file>
+        <file alias="sun">icons/sun.png</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file alias="sky_def_frag">shaders/Viewport_scene_def.frag</file>
+        <file alias="sky_def_vert">shaders/Viewport_scene_def.vert</file>
+        <file alias="grid_def_frag">shaders/CG_Grid_Def.frag</file>
+        <file alias="grid_def_vert">shaders/CG_Grid_Def.vert</file>
+    </qresource>
+</RCC>

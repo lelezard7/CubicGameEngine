@@ -1,0 +1,1266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CubicGameEngineWindow</class>
+ <widget class="QMainWindow" name="CubicGameEngineWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1850</width>
+    <height>677</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>CubicGameEngineWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>3</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>3</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <item>
+         <widget class="QTabWidget" name="tabWidget_left">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>160</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="standardObjectsCollection">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <attribute name="title">
+            <string>Стандартные объекты</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>3</number>
+              </property>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_5">
+                <property name="spacing">
+                 <number>3</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="button_primitives">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>90</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Примитивы</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="button_lighting">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>90</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Освещение</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="button_vegetation">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>90</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Растительность</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QListWidget" name="standardObjectsArea">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>25</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="explorer">
+           <attribute name="title">
+            <string>Проводник</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QTreeView" name="treeView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="favorites">
+           <attribute name="title">
+            <string>Избранное</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QListWidget" name="listWidget"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="sharedProgressBar">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QSplitter" name="splitter">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="Viewport" name="viewport">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+       <widget class="QTabWidget" name="tabWidget_bottom">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::South</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="documentMode">
+         <bool>true</bool>
+        </property>
+        <property name="movable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="tab_errorList">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <horstretch>1</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <attribute name="title">
+          <string>Список ошибок</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="spacing">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="button_filter_error">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string> Ошибки</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../resources/resources.qrc">
+                <normaloff>:/icons/error</normaloff>:/icons/error</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_filter_warning">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string> Предупреждения</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../resources/resources.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="errorList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_output">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <horstretch>1</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <attribute name="title">
+          <string>Вывод</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QListView" name="listView_output">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QTabWidget" name="tabWidget_right">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>160</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="properties">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <attribute name="title">
+         <string>Свойства</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Сцена</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QTreeView" name="treeView_2"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1850</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="file">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="newProject"/>
+    <addaction name="save"/>
+    <addaction name="saveAs"/>
+    <addaction name="saveAll"/>
+    <addaction name="openProject"/>
+    <addaction name="separator"/>
+    <addaction name="settings"/>
+    <addaction name="exit"/>
+   </widget>
+   <widget class="QMenu" name="Project">
+    <property name="title">
+     <string>Проект</string>
+    </property>
+    <addaction name="newLevel"/>
+    <addaction name="openLevel"/>
+    <addaction name="separator"/>
+    <addaction name="projectParameters"/>
+    <addaction name="levelParameters"/>
+    <addaction name="runProject"/>
+    <addaction name="startDebugging"/>
+    <addaction name="buildProject"/>
+   </widget>
+   <widget class="QMenu" name="help">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="aboutCubicGameEngine"/>
+   </widget>
+   <widget class="QMenu" name="tools">
+    <property name="title">
+     <string>Инструменты</string>
+    </property>
+    <widget class="QMenu" name="painting">
+     <property name="title">
+      <string>Рисование</string>
+     </property>
+     <widget class="QMenu" name="primitives">
+      <property name="title">
+       <string>Примитивы</string>
+      </property>
+      <addaction name="point"/>
+      <addaction name="line"/>
+      <addaction name="square"/>
+      <addaction name="circle"/>
+      <addaction name="triangle"/>
+      <addaction name="cube"/>
+      <addaction name="pyramid"/>
+      <addaction name="sphere"/>
+      <addaction name="cylinder"/>
+      <addaction name="torus"/>
+      <addaction name="text"/>
+      <addaction name="polygon"/>
+     </widget>
+     <widget class="QMenu" name="lighting">
+      <property name="title">
+       <string>Освещение</string>
+      </property>
+      <addaction name="directionalLight"/>
+      <addaction name="diffusedLighting"/>
+      <addaction name="backgroundLighting"/>
+     </widget>
+     <addaction name="primitives"/>
+     <addaction name="lighting"/>
+    </widget>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>Окна</string>
+     </property>
+     <widget class="QMenu" name="menu_2">
+      <property name="title">
+       <string>Свойства</string>
+      </property>
+      <addaction name="action_34"/>
+      <addaction name="separator"/>
+      <addaction name="action_7"/>
+      <addaction name="action_9"/>
+      <addaction name="action_10"/>
+     </widget>
+     <widget class="QMenu" name="menu_3">
+      <property name="title">
+       <string>Стандартные объекты</string>
+      </property>
+      <addaction name="action_31"/>
+      <addaction name="separator"/>
+      <addaction name="action_11"/>
+      <addaction name="action_12"/>
+      <addaction name="action_13"/>
+     </widget>
+     <widget class="QMenu" name="menu_4">
+      <property name="title">
+       <string>Проводник</string>
+      </property>
+      <addaction name="action_29"/>
+      <addaction name="separator"/>
+      <addaction name="action_14"/>
+      <addaction name="action_15"/>
+      <addaction name="action_16"/>
+     </widget>
+     <widget class="QMenu" name="menu_5">
+      <property name="title">
+       <string>Избранное</string>
+      </property>
+      <addaction name="action_28"/>
+      <addaction name="separator"/>
+      <addaction name="action_17"/>
+      <addaction name="action_18"/>
+      <addaction name="action_19"/>
+     </widget>
+     <widget class="QMenu" name="menu_6">
+      <property name="title">
+       <string>Список ошибок</string>
+      </property>
+      <addaction name="action_22"/>
+      <addaction name="separator"/>
+      <addaction name="action_23"/>
+      <addaction name="action_24"/>
+      <addaction name="action_25"/>
+     </widget>
+     <widget class="QMenu" name="menu_7">
+      <property name="title">
+       <string>Вывод</string>
+      </property>
+      <addaction name="action_35"/>
+      <addaction name="separator"/>
+      <addaction name="action_37"/>
+      <addaction name="action_38"/>
+      <addaction name="action_39"/>
+     </widget>
+     <addaction name="menu_2"/>
+     <addaction name="menu_3"/>
+     <addaction name="menu_4"/>
+     <addaction name="menu_5"/>
+     <addaction name="menu_6"/>
+     <addaction name="menu_7"/>
+    </widget>
+    <addaction name="painting"/>
+    <addaction name="separator"/>
+    <addaction name="menu"/>
+   </widget>
+   <addaction name="file"/>
+   <addaction name="Project"/>
+   <addaction name="tools"/>
+   <addaction name="help"/>
+  </widget>
+  <widget class="QToolBar" name="lightingPanel">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="runProject"/>
+   <addaction name="buildProject"/>
+   <addaction name="startDebugging"/>
+  </widget>
+  <action name="newProject">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/new_project</normaloff>
+     <normalon>:/app/new_project</normalon>:/icons/new_project</iconset>
+   </property>
+   <property name="text">
+    <string>Новый проект</string>
+   </property>
+  </action>
+  <action name="openProject">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/open_project</normaloff>:/icons/open_project</iconset>
+   </property>
+   <property name="text">
+    <string>Открыть проект</string>
+   </property>
+  </action>
+  <action name="save">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/save_project</normaloff>
+     <normalon>:/app/save_project</normalon>:/icons/save_project</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="saveAs">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/save_project</normaloff>
+     <normalon>:/app/save_project</normalon>:/icons/save_project</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить как...</string>
+   </property>
+  </action>
+  <action name="saveAll">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/save_project</normaloff>
+     <normalon>:/app/save_project</normalon>:/icons/save_project</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить все</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/exit</normaloff>
+     <normalon>:/app/exit</normalon>:/icons/exit</iconset>
+   </property>
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="newLevel">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/new_project</normaloff>
+     <normalon>:/app/new_project</normalon>:/icons/new_project</iconset>
+   </property>
+   <property name="text">
+    <string>Новый уровень</string>
+   </property>
+  </action>
+  <action name="openLevel">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/open_project</normaloff>
+     <normalon>:/app/open_project</normalon>:/icons/open_project</iconset>
+   </property>
+   <property name="text">
+    <string>Открыть уровень</string>
+   </property>
+  </action>
+  <action name="aboutCubicGameEngine">
+   <property name="text">
+    <string>О CubicGame Engine</string>
+   </property>
+  </action>
+  <action name="point">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/point</normaloff>:/icons/point</iconset>
+   </property>
+   <property name="text">
+    <string>Точка</string>
+   </property>
+  </action>
+  <action name="line">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/line</normaloff>
+     <normalon>:/app/section</normalon>:/icons/line</iconset>
+   </property>
+   <property name="text">
+    <string>Линия</string>
+   </property>
+   <property name="toolTip">
+    <string>Линия</string>
+   </property>
+  </action>
+  <action name="square">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/square</normaloff>:/icons/square</iconset>
+   </property>
+   <property name="text">
+    <string>Квадрат</string>
+   </property>
+  </action>
+  <action name="circle">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/circle</normaloff>:/icons/circle</iconset>
+   </property>
+   <property name="text">
+    <string>Окружность</string>
+   </property>
+  </action>
+  <action name="triangle">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/triangle</normaloff>:/icons/triangle</iconset>
+   </property>
+   <property name="text">
+    <string>Треугольник</string>
+   </property>
+  </action>
+  <action name="cube">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/cube</normaloff>:/icons/cube</iconset>
+   </property>
+   <property name="text">
+    <string>Куб</string>
+   </property>
+  </action>
+  <action name="pyramid">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/pyramid</normaloff>:/icons/pyramid</iconset>
+   </property>
+   <property name="text">
+    <string>Пирамида</string>
+   </property>
+  </action>
+  <action name="sphere">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/sphere</normaloff>:/icons/sphere</iconset>
+   </property>
+   <property name="text">
+    <string>Сфера</string>
+   </property>
+  </action>
+  <action name="cylinder">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/cylinder</normaloff>:/icons/cylinder</iconset>
+   </property>
+   <property name="text">
+    <string>Цилиндр</string>
+   </property>
+  </action>
+  <action name="torus">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/torus</normaloff>:/icons/torus</iconset>
+   </property>
+   <property name="text">
+    <string>Тор</string>
+   </property>
+   <property name="toolTip">
+    <string>Тор</string>
+   </property>
+  </action>
+  <action name="text">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/text</normaloff>:/icons/text</iconset>
+   </property>
+   <property name="text">
+    <string>Текст</string>
+   </property>
+  </action>
+  <action name="polygon">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/polygon</normaloff>:/icons/polygon</iconset>
+   </property>
+   <property name="text">
+    <string>Полигон</string>
+   </property>
+  </action>
+  <action name="directionalLight">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/flashlight</normaloff>:/icons/flashlight</iconset>
+   </property>
+   <property name="text">
+    <string>Направленный свет</string>
+   </property>
+  </action>
+  <action name="backgroundLighting">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/sun</normaloff>:/icons/sun</iconset>
+   </property>
+   <property name="text">
+    <string>Фоновое освещение</string>
+   </property>
+  </action>
+  <action name="diffusedLighting">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/light_bulb</normaloff>:/icons/light_bulb</iconset>
+   </property>
+   <property name="text">
+    <string>Рассеянное освещение</string>
+   </property>
+   <property name="toolTip">
+    <string>Рассеянное освещение</string>
+   </property>
+  </action>
+  <action name="panel_primitive">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Панель</string>
+   </property>
+  </action>
+  <action name="panel_lighting">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Панель</string>
+   </property>
+  </action>
+  <action name="levelParameters">
+   <property name="text">
+    <string>Параметры уровня</string>
+   </property>
+  </action>
+  <action name="projectParameters">
+   <property name="text">
+    <string>Параметры проекта</string>
+   </property>
+  </action>
+  <action name="settings">
+   <property name="text">
+    <string>Настройки</string>
+   </property>
+  </action>
+  <action name="runProject">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/run</normaloff>:/icons/run</iconset>
+   </property>
+   <property name="text">
+    <string>Запустить</string>
+   </property>
+  </action>
+  <action name="startDebugging">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/debug</normaloff>:/icons/debug</iconset>
+   </property>
+   <property name="text">
+    <string>Начать отладку</string>
+   </property>
+  </action>
+  <action name="buildProject">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/compile</normaloff>:/icons/compile</iconset>
+   </property>
+   <property name="text">
+    <string>Собрать</string>
+   </property>
+  </action>
+  <action name="action_7">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_9">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_10">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+  <action name="action_11">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_12">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_13">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+  <action name="action_14">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_15">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_16">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+  <action name="action_17">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_18">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_19">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+  <action name="action_22">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_23">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_24">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_25">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+  <action name="action_28">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_29">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_31">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_34">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_35">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Вкл</string>
+   </property>
+  </action>
+  <action name="action_37">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Слева</string>
+   </property>
+  </action>
+  <action name="action_38">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Справа</string>
+   </property>
+  </action>
+  <action name="action_39">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Снизу</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Viewport</class>
+   <extends>QOpenGLWidget</extends>
+   <header>CG_Viewport.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../resources/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
