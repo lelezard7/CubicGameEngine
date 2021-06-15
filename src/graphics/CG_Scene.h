@@ -9,8 +9,6 @@
 #include "CG_Primitives.h"
 #include <QOpenGLBuffer>
 
-#include "../underConsideration/Camera.h"
-
 class CGSky;
 class CGGrid;
 
@@ -26,7 +24,7 @@ public:
     CGScene(const QWidget* parent);
     ~CGScene();
 
-    void setShaderProgramGrid(QOpenGLShaderProgram* shaderProgram);
+    void setShaderProgramGrid(CGStdShaderProgram* shaderProgram);
 
     void initialize();
 //    QOpenGLShaderProgram* getProgram();
@@ -49,30 +47,39 @@ public:
 };
 
 
-class CGGrid : public QOpenGLFunctions
+class CGGrid : public CGStdObject
 {
-    const QWidget* parent_;
-
-    QOpenGLShaderProgram* shaderProgram_;
-
-    QOpenGLBuffer vertexBuffer_;
-    QOpenGLBuffer indexBuffer_;
-
-    QVector<CGVertex> vertices_;
-    QVector<GLuint> indices_;
+    QVector<CGVertex> createVertices() override;
+    QVector<GLuint> createIndices() override;
 
 public:
-    CGGrid(const QWidget* parent);
-    ~CGGrid();
-
-    void initialize();
-    void createGrid();
-
-    void setShaderProgram(QOpenGLShaderProgram* shaderProgram);
-
-//    QOpenGLShaderProgram* getProgram();
-    void draw();
-
+    void draw() override;
 };
+
+//class CGGrid : public QOpenGLFunctions
+//{
+//    const QWidget* parent_;
+
+//    QOpenGLShaderProgram* shaderProgram_;
+
+//    QOpenGLBuffer vertexBuffer_;
+//    QOpenGLBuffer indexBuffer_;
+
+//    QVector<CGVertex> vertices_;
+//    QVector<GLuint> indices_;
+
+//public:
+//    CGGrid(const QWidget* parent);
+//    ~CGGrid();
+
+//    void initialize();
+//    void createGrid();
+
+//    void setShaderProgram(QOpenGLShaderProgram* shaderProgram);
+
+////    QOpenGLShaderProgram* getProgram();
+//    void draw();
+
+//};
 
 #endif

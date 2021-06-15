@@ -1,228 +1,18 @@
 #include "CG_Primitives.h"
 
 
-CGVertex::CGVertex() {}
-
-CGVertex::CGVertex(const CGVertex& other)
-    : position(other.position),
-      color(other.color),
-      normal(other.normal) {}
-
-CGVertex::CGVertex(const QVector3D& position)
-    : position(position),
-      color(0.0f, 0.0f, 0.0f, 1.0f),
-      normal(0.0f, 0.0f, 0.0f) {}
-
-CGVertex::CGVertex(const QVector3D& position, const QVector4D& color)
-    : position(position),
-      color(color),
-      normal(0.0f, 0.0f, 0.0f) {}
-
-CGVertex::CGVertex(const QVector3D& position, const QVector4D& color, const QVector3D& normal)
-    : position(position),
-      color(color),
-      normal(normal) {}
-
-void CGVertex::operator=(const CGVertex& other)
-{
-    position = other.position;
-    color = other.color;
-    normal = other.normal;
-}
-
-
-
-
-
-
-//CGShaderProgram::CGShaderProgram()
-//{
-//}
-
-//void CGShaderProgram::setShaderFromSourceFile(QOpenGLShader::ShaderType type, QString fileName)
-//{
-//    if (type == QOpenGLShader::Vertex) {
-
-//        if (vertexShaderFileName_ != "") {
-//            vertexShaderFileName_ = "";
-//        }
-
-//        if (vertexShaderSourceCode_ != "") {
-//            vertexShaderSourceCode_ = "";
-//        }
-
-
-//        vertexShaderFileName_ = fileName;
-//        shaderProgram_.addShaderFromSourceFile(type, fileName);
-
-//        if (fragmentShaderFileName_ != "" || fragmentShaderSourceCode_ != "") {
-//            shaderProgram_.link();
-//        }
-//    }
-
-//    if (type == QOpenGLShader::Fragment) {
-
-//        if (fragmentShaderFileName_ != "") {
-//            fragmentShaderFileName_ = "";
-//        }
-
-//        if (fragmentShaderSourceCode_ != "") {
-//            fragmentShaderSourceCode_ = "";
-//        }
-
-//        fragmentShaderFileName_ = fileName;
-//        shaderProgram_.addShaderFromSourceFile(type, fileName);
-
-//        if (vertexShaderFileName_ != "" || vertexShaderSourceCode_ != "") {
-//            shaderProgram_.link();
-//        }
-//    }
-//}
-
-//void CGShaderProgram::setShaderFromSourceCode(QOpenGLShader::ShaderType type, QString source)
-//{
-//    if (type == QOpenGLShader::Vertex) {
-
-//        if (vertexShaderFileName_ != "") {
-//            vertexShaderFileName_ = "";
-//        }
-
-//        if (vertexShaderSourceCode_ != "") {
-//            vertexShaderSourceCode_ = "";
-//        }
-
-//        vertexShaderSourceCode_ = source;
-//        shaderProgram_.addShaderFromSourceCode(type, vertexShaderSourceCode_);
-
-//        if (fragmentShaderFileName_ != "" || fragmentShaderSourceCode_ != "") {
-//            shaderProgram_.link();
-//        }
-//    }
-
-//    if (type == QOpenGLShader::Fragment) {
-
-//        if (fragmentShaderFileName_ != "") {
-//            fragmentShaderFileName_ = "";
-//        }
-
-//        if (fragmentShaderSourceCode_ != "") {
-//            fragmentShaderSourceCode_ = "";
-//        }
-
-//        fragmentShaderSourceCode_ = source;
-//        shaderProgram_.addShaderFromSourceCode(type, fragmentShaderSourceCode_);
-
-//        if (vertexShaderFileName_ != "" || vertexShaderSourceCode_ != "") {
-//            shaderProgram_.link();
-//        }
-//    }
-//}
-
-void CGShaderProgram::addType(unsigned int type, QString name, bool isUniform)
-{
-    for (int i = 0; i < types_.size(); ++i) {
-        if (types_[i].dataType == type || types_[i].name == name)
-            return;
-    }
-
-    int _location;
-
-    if (isUniform) {
-        _location = uniformLocation(name);
-        enableAttributeArray(_location);
-    }
-
-    types_.push_back(CGShaderProgramData(type, name, _location));
-}
-
-void CGShaderProgram::removeType(unsigned int type)
-{
-    for (int i = 0; i < types_.size(); ++i) {
-        if (types_[i].dataType == type) {
-            types_.remove(i);
-            break;
-        }
-    }
-}
-
-int CGShaderProgram::initializeVariables()
-{
-    return initializeVariables(types_);
-}
-
-int CGShaderProgram::refreshVariables()
-{
-    return refreshVariables(types_);
-}
-
-
-
-void CGStdShaderProgram::setTransformationMatrix(const QMatrix4x4* transformationMatrix)
-{
-    transformationMatrix_ = transformationMatrix;
-
-    CGShaderProgram::refreshVariables();
-
-    transformationMatrix_ = nullptr;
-}
-
-int CGStdShaderProgram::initializeVariables(const QVector<CGShaderProgramData>& types)
-{
-    for (int i = 0; i < types.size(); ++i) {
-        if (types[i].dataType == CG_SHADER_PROGRAM_VERTICES) {
-            setAttributeBuffer(types[i].location, GL_FLOAT, 0, 3, sizeof(CGVertex));
-            continue;
-        }
-
-        if (types[i].dataType == CG_SHADER_PROGRAM_COLORS) {
-            setAttributeBuffer(types[i].location, GL_FLOAT, 3, 4, sizeof(CGVertex));
-            continue;
-        }
-
-        if (types[i].dataType == CG_SHADER_PROGRAM_NORMALS) {
-            setAttributeBuffer(types[i].location, GL_FLOAT, 7, 3, sizeof(CGVertex));
-            continue;
-        }
-    }
-
-    return 0;
-}
-
-int CGStdShaderProgram::refreshVariables(const QVector<CGShaderProgramData>& types)
-{
-    for (int i = 0; i < types.size(); ++i) {
-        if (types[i].dataType == CG_SHADER_PROGRAM_TRANSFORMATION_MATRIX) {
-            setUniformValue(types[i].location, *transformationMatrix_);
-            break;
-        }
-    }
-
-    return 0;
-}
-
-const QMatrix4x4* CGStdShaderProgram::getTransformationMatrix()
-{
-    return transformationMatrix_;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CGObject::CGObject()
     : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-      indexBuffer_(QOpenGLBuffer::IndexBuffer) {}
+      indexBuffer_(QOpenGLBuffer::IndexBuffer)
+{
+    modelMatrix_.setToIdentity();
+
+    position_ = QVector3D(0.0f, 0.0f, -1.0f);
+    size_ = QVector3D(1.0f, 1.0f, 1.0f);
+    rotation_ = QVector3D(0.0f, 0.0f, 1.0f);
+
+    rotationAngle_ = 0.0f;
+}
 
 void CGObject::create()
 {
@@ -242,6 +32,8 @@ void CGObject::create()
     indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
     indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
     indexBuffer_.release();
+
+
 }
 
 QVector<CGVertex> CGObject::getVertices() const
@@ -264,37 +56,158 @@ int CGObject::indicesCount() const
     return indices_.size();
 }
 
-void CGObject::bind()
+QMatrix4x4 CGObject::getModelMatrix() const
 {
-    shaderProgram_->bind();
+    return modelMatrix_;
+}
+
+void CGObject::setPosition(float x, float y, float z)
+{
+    position_.setX(x);
+    position_.setY(y);
+    position_.setZ(z);
+
+    applyTransformation();
+}
+
+void CGObject::setPosition(const QVector3D& position)
+{
+    setPosition(position.x(), position.y(), position.z());
+}
+
+QVector3D CGObject::getPosition() const
+{
+    return position_;
+}
+
+void CGObject::setSize(float x, float y, float z)
+{
+    size_.setX(x);
+    size_.setY(y);
+    size_.setZ(z);
+
+    applyTransformation();
+}
+
+void CGObject::setSize(const QVector3D& size)
+{
+    setSize(size.x(), size.y(), size.z());
+}
+
+QVector3D CGObject::getSize() const
+{
+    return size_;
+}
+
+void CGObject::rotate(float angle, float x, float y, float z)
+{
+    rotationAngle_ = angle;
+
+    rotation_.setX(x);
+    rotation_.setY(y);
+    rotation_.setZ(z);
+
+    applyTransformation();
+}
+
+void CGObject::rotate(float angle, const QVector3D& vector)
+{
+    rotate(angle, vector.x(), vector.y(), vector.z());
+}
+
+QVector3D CGObject::getRotationAxis() const
+{
+    return rotation_;
+}
+
+float CGObject::getRotationAngle() const
+{
+    return rotationAngle_;
+}
+
+void CGObject::bindVertexBuffer()
+{
     vertexBuffer_.bind();
+}
+
+void CGObject::bindIndexBuffer()
+{
     indexBuffer_.bind();
 }
 
-void CGObject::release()
+void CGObject::releaseVertexBuffer()
 {
-    shaderProgram_->release();
     vertexBuffer_.release();
+}
+
+void CGObject::releaseIndexBuffer()
+{
     indexBuffer_.release();
 }
 
-void CGObject::draw()
+void CGObject::applyTransformation()
 {
     modelMatrix_.setToIdentity();
 
     modelMatrix_.translate(position_);
-    modelMatrix_.scale(size_);
     modelMatrix_.rotate(rotationAngle_, rotation_);
+    modelMatrix_.scale(size_);
+}
 
+
+
+
+
+
+
+
+
+
+
+CGStdObject::CGStdObject()
+{
+    shaderProgram_ = nullptr;
+}
+
+void CGStdObject::setShaderProgram(CGStdShaderProgram* shaderProgram)
+{
+    shaderProgram_ = shaderProgram;
+    shaderProgram_->CGShaderProgram::initializeVariables();
+}
+
+CGStdShaderProgram* CGStdObject::getShaderProgram() const
+{
+    return shaderProgram_;
+}
+
+void CGStdObject::bind()
+{
+    shaderProgram_->bind();
+    bindVertexBuffer();
+    bindIndexBuffer();
+}
+
+void CGStdObject::release()
+{
+    shaderProgram_->release();
+    releaseVertexBuffer();
+    releaseIndexBuffer();
+}
+
+void CGStdObject::draw()
+{
     CGCamera* _camera = CGCamera::getActiveCamera();
 
+    QMatrix4x4 ere = _camera->getProjectionMatrix() * _camera->getViewMatrix() * getModelMatrix();
 
+    shaderProgram_->setMatrix(CG_SHADER_U_TRANSFORMATION_MATRIX, &ere);
+    shaderProgram_->CGShaderProgram::refreshVariables();
 
+    shaderProgram_->setUniformValue("u_gridColor", QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 
+    glDrawElements(GL_TRIANGLES, indicesCount(), GL_UNSIGNED_INT, nullptr);
 
-
-
-
+}
 
 
 
@@ -337,68 +250,51 @@ void CGObject::draw()
 //    shaderProgram_->enableAttributeArray(_location);
 //    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 7, 3, sizeof(CGVertex));
 
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
-}
 
-//void CGObject::setShaderProgram(QOpenGLShaderProgram* shaderProgram)
-//{
-//    shaderProgram_ = shaderProgram;
-//}
 
-QOpenGLShaderProgram* CGObject::getShaderProgram() const
+
+
+QVector<CGVertex> CGCube::createVertices()
 {
-    return shaderProgram_;
+    QVector<CGVertex> _vertices {
+        CGVertex(QVector3D(-1.0f, -1.0f,  1.0f)),
+        CGVertex(QVector3D(-1.0f,  1.0f,  1.0f)),
+        CGVertex(QVector3D( 1.0f,  1.0f,  1.0f)),
+        CGVertex(QVector3D( 1.0f, -1.0f,  1.0f)),
+
+        CGVertex(QVector3D(-1.0f, -1.0f, -1.0f)),
+        CGVertex(QVector3D(-1.0f,  1.0f, -1.0f)),
+        CGVertex(QVector3D( 1.0f,  1.0f, -1.0f)),
+        CGVertex(QVector3D( 1.0f, -1.0f, -1.0f)),
+    };
+
+    return _vertices;
 }
 
-//QMatrix4x4 CGObject::getModelMatrix() const
-//{
-
-//}
-
-void CGObject::setPosition(float x, float y, float z)
+QVector<GLuint> CGCube::createIndices()
 {
+    QVector<GLuint> _indices {
+        0, 1, 2,
+        0, 2, 3,
 
+        4, 5, 6,
+        4, 5, 7,
+
+        1, 2, 5,
+        5, 6, 2,
+
+        0, 3, 4,
+        4, 7, 3,
+
+        0, 1, 5,
+        4, 5, 0,
+
+        2, 3, 7,
+        6, 7, 2
+    };
+
+    return _indices;
 }
-
-void CGObject::setPosition(const QVector3D& position)
-{
-
-}
-
-//QVector3D CGObject::getPosition() const
-//{
-
-//}
-
-void CGObject::setSize(float x, float y, float z)
-{
-
-}
-
-void CGObject::setSize(const QVector3D& size)
-{
-
-}
-
-//QVector3D CGObject::getSize() const
-//{
-
-//}
-
-//void CGObject::rotate(float angle, float x, float y, float z)
-//{
-
-//}
-
-//void CGObject::rotate(float angle, const QVector3D& vector)
-//{
-
-//}
-
-//QVector3D CGObject::getRotation() const
-//{
-
-//}
 
 
 
@@ -544,102 +440,107 @@ void CGTriangle::draw()
 
 
 
-CGCube::CGCube()
-    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-      indexBuffer_(QOpenGLBuffer::IndexBuffer)
-{
-    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, 1.0f)));
-    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, 1.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, 1.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, 1.0f)));
+//CGCube::CGCube()
+//    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
+//      indexBuffer_(QOpenGLBuffer::IndexBuffer)
+//{
+//    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, 1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, 1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, 1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, 1.0f)));
 
-    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, -1.0f)));
-    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, -1.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, -1.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, -1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, -1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, -1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, -1.0f)));
+//    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, -1.0f)));
 
-    indices_.push_back(0); indices_.push_back(1); indices_.push_back(2);
-    indices_.push_back(0); indices_.push_back(2); indices_.push_back(3);
+//    indices_.push_back(0); indices_.push_back(1); indices_.push_back(2);
+//    indices_.push_back(0); indices_.push_back(2); indices_.push_back(3);
 
-    indices_.push_back(4); indices_.push_back(5); indices_.push_back(6);
-    indices_.push_back(4); indices_.push_back(5); indices_.push_back(7);
+//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(6);
+//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(7);
 
-    indices_.push_back(1); indices_.push_back(2); indices_.push_back(5);
-    indices_.push_back(5); indices_.push_back(6); indices_.push_back(2);
+//    indices_.push_back(1); indices_.push_back(2); indices_.push_back(5);
+//    indices_.push_back(5); indices_.push_back(6); indices_.push_back(2);
 
-    indices_.push_back(0); indices_.push_back(3); indices_.push_back(4);
-    indices_.push_back(4); indices_.push_back(7); indices_.push_back(3);
+//    indices_.push_back(0); indices_.push_back(3); indices_.push_back(4);
+//    indices_.push_back(4); indices_.push_back(7); indices_.push_back(3);
 
-    indices_.push_back(0); indices_.push_back(1); indices_.push_back(5);
-    indices_.push_back(4); indices_.push_back(5); indices_.push_back(0);
+//    indices_.push_back(0); indices_.push_back(1); indices_.push_back(5);
+//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(0);
 
-    indices_.push_back(2); indices_.push_back(3); indices_.push_back(7);
-    indices_.push_back(6); indices_.push_back(7); indices_.push_back(2);
-}
+//    indices_.push_back(2); indices_.push_back(3); indices_.push_back(7);
+//    indices_.push_back(6); indices_.push_back(7); indices_.push_back(2);
+//}
 
-CGCube::~CGCube()
-{
+//CGCube::~CGCube()
+//{
 
-}
+//}
 
-void CGCube::initialize()
-{
-    initializeOpenGLFunctions();
+//void CGCube::initialize()
+//{
+//    initializeOpenGLFunctions();
 
-    vertexBuffer_.create();
-    vertexBuffer_.bind();
-    vertexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    vertexBuffer_.allocate(vertices_.constData(), vertices_.size() * sizeof(CGVertex));
-    vertexBuffer_.release();
+//    vertexBuffer_.create();
+//    vertexBuffer_.bind();
+//    vertexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+//    vertexBuffer_.allocate(vertices_.constData(), vertices_.size() * sizeof(CGVertex));
+//    vertexBuffer_.release();
 
-    indexBuffer_.create();
-    indexBuffer_.bind();
-    indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
-    indexBuffer_.release();
-}
+//    indexBuffer_.create();
+//    indexBuffer_.bind();
+//    indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+//    indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
+//    indexBuffer_.release();
+//}
 
-void CGCube::setShaderProgram(QOpenGLShaderProgram* shaderProgram)
-{
-    shaderProgram_ = shaderProgram;
-    _location = shaderProgram_->attributeLocation("in_gridPosition");
-    shaderProgram_->enableAttributeArray(_location);
-}
+//void CGCube::setShaderProgram(QOpenGLShaderProgram* shaderProgram)
+//{
+//    shaderProgram_ = shaderProgram;
+//    _location = shaderProgram_->attributeLocation("in_gridPosition");
+//    shaderProgram_->enableAttributeArray(_location);
+//}
 
-void CGCube::bind()
-{
+//void CGCube::bind()
+//{
 
-}
+//}
 
-void CGCube::draw()
-{
-    shaderProgram_->bind();
-    indexBuffer_.bind();
-    vertexBuffer_.bind(); //??
+//void CGCube::draw()
+//{
+//    shaderProgram_->bind();
+//    indexBuffer_.bind();
+//    vertexBuffer_.bind(); //??
 
-    QMatrix4x4 _model;
-    _model.setToIdentity();
-    _model.translate(0.0f, 0.0f, -15.0f);
-    _model.scale(3.0f, 3.0f, 3.0f);
-    _model.rotate(30.0f, QVector3D(3.0f, 3.0f, 3.0f));
+//    QMatrix4x4 _model;
+//    _model.setToIdentity();
 
-    CGCamera* _camera = CGCamera::getActiveCamera();
-    QString dd = "u_modelViewProjectionMatrix";
-    shaderProgram_->setUniformValue(dd.toStdString().c_str(),
-                                    _camera->getProjectionMatrix() * _camera->getViewMatrix() * _model);
+//    _model.translate(0.0f, 0.0f, -15.0f);
+//    _model.rotate(30.0f, QVector3D(3.0f, 3.0f, 3.0f));
+//    _model.scale(3.0f, 3.0f, 3.0f);
 
 
-    shaderProgram_->setUniformValue("u_gridColor", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+
+//    CGCamera* _camera = CGCamera::getActiveCamera();
+//    QString dd = "u_modelViewProjectionMatrix";
+//    shaderProgram_->setUniformValue(dd.toStdString().c_str(),
+//                                    _camera->getProjectionMatrix() * _camera->getViewMatrix() * _model);
 
 
-    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 0, 3, sizeof(CGVertex));
+//    shaderProgram_->setUniformValue("u_gridColor", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
 
-    vertexBuffer_.release();
-    indexBuffer_.release();
-    shaderProgram_->release();
-}
+//    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 0, 3, sizeof(CGVertex));
+
+//    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
+
+//    vertexBuffer_.release();
+//    indexBuffer_.release();
+//    shaderProgram_->release();
+//}
+
+
 
 
 

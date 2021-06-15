@@ -111,6 +111,7 @@ protected:
 
 
 //TODO: Добавить deltaFrameTime для более равномерных поворотов и перемещения.
+//TODO: Добавить зум.
 
 class CGDynamicCamera : public CGCamera
 {

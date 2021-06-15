@@ -25,20 +25,39 @@ void Viewport::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    scene_->initialize();
-    triangle_.initialize();
-    cube_.initialize();
-
-    shaderProgram_ = new QOpenGLShaderProgram;
+    shaderProgram_ = new CGStdShaderProgram;
 
     shaderProgram_->addShaderFromSourceFile(QOpenGLShader::Vertex, ":shaders/grid_def_vert");
     shaderProgram_->addShaderFromSourceFile(QOpenGLShader::Fragment, ":shaders/grid_def_frag");
     shaderProgram_->link();
     shaderProgram_->bind();
 
+    shaderProgram_->addVariableData(CG_SHADER_A_VERTICES, "in_gridPosition", false, false);
+    shaderProgram_->addVariableData(CG_SHADER_U_TRANSFORMATION_MATRIX, "u_transformationMatrix", true, false);
+
+
+//    shaderProgram_->addType(CG_SHADER_PROGRAM_COLORS, "u_gridColor", true);
+
+
+    scene_->initialize();
+    triangle_.initialize();
+    cube_.create();
+    cube_2_.create();
+
+    cube_.setPosition(0.0f, 0.0f, -15.0f);
+    cube_.setSize(5.0f, 2.0f, 1.0f);
+    cube_.rotate(30.0f, 0.0f, 0.0f, 1.0f);
+
+    cube_2_.setPosition(0.0f, 0.0f, 15.0f);
+    cube_2_.setSize(1.0f, 1.0f, 1.0f);
+    cube_2_.rotate(0.0f, 0.0f, 0.0f, 0.0f);
+
+
+
     scene_->setShaderProgramGrid(shaderProgram_);
     triangle_.setShaderProgram(shaderProgram_);
     cube_.setShaderProgram(shaderProgram_);
+    cube_2_.setShaderProgram(shaderProgram_);
 
 //    viewportCamera_->setMovementSpeed(1.0f);
 //    viewportCamera_->setRotationalSpeed(0.0005f);
@@ -65,7 +84,9 @@ void Viewport::initializeGL()
 
 
 
-    CGStdShaderProgram d;
+//    QOpenGLShaderProgram* f = new CGStdShaderProgram;
+//    f->
+//    CGStdObject g;
 //    d.setShaderFromSourceFile(QOpenGLShader::Vertex, ":shaders/grid_def_vert");
 //    d.setShaderFromSourceFile(QOpenGLShader::Fragment, ":shaders/grid_def_frag");
 
@@ -73,11 +94,16 @@ void Viewport::initializeGL()
 
 void Viewport::paintGL()
 {
-
     dynamicCamera_->refresh();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     scene_->draw();
+
+    cube_.bind();
     cube_.draw();
+
+    cube_2_.bind();
+    cube_2_.draw();
 }
 
 void Viewport::resizeGL(int newWidth, int newHeight)

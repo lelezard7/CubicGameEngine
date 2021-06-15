@@ -19,6 +19,7 @@ set(TS_FILES languages/CubicGameEngine_ru_RU.ts)
 
 add_executable(CubicGameEngine
     src/CubicGameEngine.cpp
+
     src/graphics/CG_Viewport.h
     src/graphics/CG_Viewport.cpp
     src/graphics/CG_Scene.h
@@ -29,6 +30,11 @@ add_executable(CubicGameEngine
     src/graphics/CG_ViewportCamera.cpp
     src/graphics/CGFrameTimer.h
     src/graphics/CGFrameTimer.cpp
+    src/graphics/CG_ShaderProgram.h
+    src/graphics/CG_ShaderProgram.cpp
+    src/graphics/CG_Vertex.h
+    src/graphics/CG_Vertex.cpp
+
     src/CG_ConsoleManager.h
     src/CG_ConsoleManager.cpp
     src/CG_SaveStruct.h
@@ -47,14 +53,6 @@ add_executable(CubicGameEngine
     resources/resources.qrc
 
     ${TS_FILES}
-
-    src/underConsideration/ShaderProgram.h
-    src/underConsideration/ShaderProgram.cpp
-    src/underConsideration/ShaderProgram.inl
-    src/underConsideration/Figures.h
-    src/underConsideration/Figures.inl
-    src/underConsideration/Camera.h
-    src/underConsideration/Camera.cpp
   )
 
 target_include_directories(CubicGameEngine PRIVATE lib/glm/glm)

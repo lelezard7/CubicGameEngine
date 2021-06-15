@@ -15,7 +15,7 @@ class Viewport : public QOpenGLWidget, public QOpenGLFunctions
 {
     Q_OBJECT
 
-    QOpenGLShaderProgram* shaderProgram_;
+    CGStdShaderProgram* shaderProgram_;
 
     CGScene* scene_;
 //    CGPrimitives* primitives_;
@@ -26,6 +26,7 @@ class Viewport : public QOpenGLWidget, public QOpenGLFunctions
     CGDynamicCamera* dynamicCamera_;
     CGTriangle triangle_;
     CGCube cube_;
+    CGCube cube_2_;
 
     bool isRcmPressed_;
 
