@@ -241,6 +241,24 @@ CGDynamicCamera::CGDynamicCamera()
     maxYaw_ = -1.0f;
 }
 
+CGDynamicCamera::CGDynamicCamera(const CGDynamicCamera& other)
+{
+    isFocus_ = other.isFocus_;
+
+    lastCursorPosition_x_ = other.lastCursorPosition_x_;
+    lastCursorPosition_y_ = other.lastCursorPosition_y_;
+
+    movementSpeed_ = other.movementSpeed_;
+    rotationalSpeed_ = other.rotationalSpeed_;
+    rollSpeed_ = other.rollSpeed_;
+
+    maxPitch_ = other.maxPitch_;
+    maxRoll_ = other.maxRoll_;
+    maxYaw_ = other.maxYaw_;
+}
+
+CGDynamicCamera::~CGDynamicCamera() {}
+
 void CGDynamicCamera::move(CGE::MovementDirection movementDirection)
 {
     QVector3D _position = getPosition();

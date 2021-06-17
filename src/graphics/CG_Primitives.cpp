@@ -2,38 +2,114 @@
 
 
 CGObject::CGObject()
-    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-      indexBuffer_(QOpenGLBuffer::IndexBuffer)
 {
+    vbo_usagePattern_ = QOpenGLBuffer::StaticDraw;
+    ebo_usagePattern_ = QOpenGLBuffer::StaticDraw;
+
+    vertexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    indexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
     modelMatrix_.setToIdentity();
 
     position_ = QVector3D(0.0f, 0.0f, -1.0f);
     size_ = QVector3D(1.0f, 1.0f, 1.0f);
-    rotation_ = QVector3D(0.0f, 0.0f, 1.0f);
 
-    rotationAngle_ = 0.0f;
+    rotation_.first = 0.0f;
+    rotation_.second = QVector3D(0.0f, 0.0f, 1.0f);
 }
 
-void CGObject::create()
+CGObject::CGObject(const CGObject& other)
+{
+    vbo_usagePattern_ = other.vbo_usagePattern_;
+    ebo_usagePattern_ = other.ebo_usagePattern_;
+
+    vertexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    indexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
+    vertices_ = other.vertices_;
+    indices_ = other.indices_;
+
+    modelMatrix_ = other.modelMatrix_;
+
+    position_ = other.position_;
+    size_ = other.size_;
+    rotation_ = other.rotation_;
+}
+
+CGObject::~CGObject()
+{
+    if (vertexBuffer_.isCreated()) {
+        vertexBuffer_.release();
+        vertexBuffer_.destroy();
+    }
+
+    if (indexBuffer_.isCreated()) {
+        indexBuffer_.release();
+        indexBuffer_.destroy();
+    }
+}
+
+int CGObject::initialize()
 {
     initializeOpenGLFunctions();
 
-    vertices_ = createVertices();
-    indices_ = createIndices();
+    if (vertexBuffer_.isCreated() || indexBuffer_.isCreated())
+        return -1;
 
-    vertexBuffer_.create();
-    vertexBuffer_.bind();
-    vertexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    vertexBuffer_.allocate(vertices_.constData(), vertices_.size() * sizeof(CGVertex));
+    if (!vertexBuffer_.create())
+        return -1;
+
+    if (!indexBuffer_.create()) {
+        vertexBuffer_.destroy();
+        return -1;
+    }
+
+    if (!setVertices(vertices_) || !setIndices(indices_))
+        return 0;
+
+    return 1;
+}
+
+bool CGObject::setVertices(QVector<CGVertex> vertices)
+{
+    if (vertices.size() == 0)
+        return false;
+
+    if (!vertexBuffer_.isCreated()) {
+        vertices_ = vertices;
+        return true;
+    }
+
+    if (!vertexBuffer_.bind())
+        return false;
+
+    vertexBuffer_.setUsagePattern(vbo_usagePattern_);
+    vertexBuffer_.allocate(vertices.constData(), vertices.size() * sizeof(CGVertex));
     vertexBuffer_.release();
 
-    indexBuffer_.create();
-    indexBuffer_.bind();
-    indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
+    vertices_ = vertices;
+    return true;
+}
+
+bool CGObject::setIndices(QVector<GLuint> indices)
+{
+    if (indices.size() == 0)
+        return false;
+
+    if (!indexBuffer_.isCreated()) {
+        indices_ = indices;
+        return true;
+    }
+
+    if (!indexBuffer_.bind())
+        return false;
+
+    indexBuffer_.setUsagePattern(ebo_usagePattern_);
+    indexBuffer_.allocate(indices.constData(), indices.size() * sizeof(GLuint));
     indexBuffer_.release();
 
-
+    indices_ = indices;
+    return true;
 }
 
 QVector<CGVertex> CGObject::getVertices() const
@@ -54,6 +130,31 @@ int CGObject::verticesCount() const
 int CGObject::indicesCount() const
 {
     return indices_.size();
+}
+
+void CGObject::setUsagePattern(QOpenGLBuffer::Type buffer, QOpenGLBuffer::UsagePattern usagePattern)
+{
+    if (buffer == QOpenGLBuffer::VertexBuffer) {
+        vbo_usagePattern_ = usagePattern;
+        setVertices(vertices_);
+        return;
+    }
+
+    if (buffer == QOpenGLBuffer::IndexBuffer) {
+        ebo_usagePattern_ = usagePattern;
+        setIndices(indices_);
+        return;
+    }
+}
+
+QOpenGLBuffer::UsagePattern CGObject::getVboUsagePattern() const
+{
+    return vbo_usagePattern_;
+}
+
+QOpenGLBuffer::UsagePattern CGObject::getEboUsagePattern() const
+{
+    return ebo_usagePattern_;
 }
 
 QMatrix4x4 CGObject::getModelMatrix() const
@@ -99,50 +200,69 @@ QVector3D CGObject::getSize() const
     return size_;
 }
 
-void CGObject::rotate(float angle, float x, float y, float z)
+void CGObject::setRotation(float angle, float x, float y, float z)
 {
-    rotationAngle_ = angle;
+    rotation_.first = angle;
 
-    rotation_.setX(x);
-    rotation_.setY(y);
-    rotation_.setZ(z);
+    rotation_.second.setX(x);
+    rotation_.second.setY(y);
+    rotation_.second.setZ(z);
 
     applyTransformation();
 }
 
-void CGObject::rotate(float angle, const QVector3D& vector)
+void CGObject::setRotation(float angle, const QVector3D& vector)
 {
-    rotate(angle, vector.x(), vector.y(), vector.z());
+    setRotation(angle, vector.x(), vector.y(), vector.z());
 }
 
 QVector3D CGObject::getRotationAxis() const
 {
-    return rotation_;
+    return rotation_.second;
 }
 
 float CGObject::getRotationAngle() const
 {
-    return rotationAngle_;
+    return rotation_.first;
 }
 
-void CGObject::bindVertexBuffer()
+bool CGObject::bind()
 {
-    vertexBuffer_.bind();
+    if (!vertexBuffer_.bind())
+        return false;
+
+    if (!indexBuffer_.bind()) {
+        vertexBuffer_.release();
+        return false;
+    }
+
+    return true;
 }
 
-void CGObject::bindIndexBuffer()
-{
-    indexBuffer_.bind();
-}
-
-void CGObject::releaseVertexBuffer()
+void CGObject::release()
 {
     vertexBuffer_.release();
+    indexBuffer_.release();
 }
 
-void CGObject::releaseIndexBuffer()
+const CGObject& CGObject::operator=(const CGObject& other)
 {
-    indexBuffer_.release();
+    vbo_usagePattern_ = other.vbo_usagePattern_;
+    ebo_usagePattern_ = other.ebo_usagePattern_;
+
+    vertexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    indexBuffer_ = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
+    vertices_ = other.vertices_;
+    indices_ = other.indices_;
+
+    modelMatrix_ = other.modelMatrix_;
+
+    position_ = other.position_;
+    size_ = other.size_;
+    rotation_ = other.rotation_;
+
+    return *this;
 }
 
 void CGObject::applyTransformation()
@@ -150,21 +270,23 @@ void CGObject::applyTransformation()
     modelMatrix_.setToIdentity();
 
     modelMatrix_.translate(position_);
-    modelMatrix_.rotate(rotationAngle_, rotation_);
+    modelMatrix_.rotate(rotation_.first, rotation_.second);
     modelMatrix_.scale(size_);
 }
 
 
 
+CGStdObject::CGStdObject() : CGObject()
+{
+    shaderProgram_ = nullptr;
+}
 
+CGStdObject::CGStdObject(const CGStdObject& other) : CGObject(other)
+{
+    shaderProgram_ = other.shaderProgram_;
+}
 
-
-
-
-
-
-
-CGStdObject::CGStdObject()
+CGStdObject::~CGStdObject()
 {
     shaderProgram_ = nullptr;
 }
@@ -172,7 +294,6 @@ CGStdObject::CGStdObject()
 void CGStdObject::setShaderProgram(CGStdShaderProgram* shaderProgram)
 {
     shaderProgram_ = shaderProgram;
-    shaderProgram_->CGShaderProgram::initializeVariables();
 }
 
 CGStdShaderProgram* CGStdObject::getShaderProgram() const
@@ -180,33 +301,33 @@ CGStdShaderProgram* CGStdObject::getShaderProgram() const
     return shaderProgram_;
 }
 
-void CGStdObject::bind()
+bool CGStdObject::bind()
 {
-    shaderProgram_->bind();
-    bindVertexBuffer();
-    bindIndexBuffer();
+    if (!shaderProgram_->bind())
+        return false;
+
+    return CGObject::bind();
 }
 
 void CGStdObject::release()
 {
     shaderProgram_->release();
-    releaseVertexBuffer();
-    releaseIndexBuffer();
+    CGObject::release();
 }
 
-void CGStdObject::draw()
+int CGStdObject::draw()
 {
     CGCamera* _camera = CGCamera::getActiveCamera();
 
-    QMatrix4x4 ere = _camera->getProjectionMatrix() * _camera->getViewMatrix() * getModelMatrix();
+    if (!_camera)
+        return -1;
 
-    shaderProgram_->setMatrix(CG_SHADER_U_TRANSFORMATION_MATRIX, &ere);
-    shaderProgram_->CGShaderProgram::refreshVariables();
-
-    shaderProgram_->setUniformValue("u_gridColor", QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
+    QMatrix4x4 _transformationMatrix = _camera->getProjectionMatrix() * _camera->getViewMatrix() * getModelMatrix();
+    shaderProgram_->setMatrix(CG_SHADER_U_TRANSFORMATION_MATRIX, &_transformationMatrix,
+                              CGStdShaderProgram::SHORT_TERM_STORAGE);
 
     glDrawElements(GL_TRIANGLES, indicesCount(), GL_UNSIGNED_INT, nullptr);
-
+    return 0;
 }
 
 
@@ -215,46 +336,8 @@ void CGStdObject::draw()
 
 
 
-//    if (modelMatrixName_ == viewMatrixName_ == projectionMatrixName_) {
-//        shaderProgram_->setUniformValue(modelMatrixName_.toStdString().c_str(),
-//            _camera->getProjectionMatrix() * _camera->getViewMatrix() * modelMatrix_);
-//    }
-//    else if (modelMatrixName_ == viewMatrixName_) {
-//        shaderProgram_->setUniformValue(modelMatrixName_.toStdString().c_str(),
-//                                        _camera->getViewMatrix() * modelMatrix_);
 
-//        shaderProgram_->setUniformValue(projectionMatrixName_.toStdString().c_str(),
-//                                        _camera->getProjectionMatrix());
-//    }
-//    else if (viewMatrixName_ == projectionMatrixName_) {
-//        shaderProgram_->setUniformValue(viewMatrixName_.toStdString().c_str(),
-//                                        _camera->getViewMatrix() * _camera->getProjectionMatrix());
-
-//        shaderProgram_->setUniformValue(modelMatrixName_.toStdString().c_str(), modelMatrix_);
-//    }
-//    else {
-//        shaderProgram_->setUniformValue(modelMatrixName_.toStdString().c_str(), modelMatrix_);
-//        shaderProgram_->setUniformValue(viewMatrixName_.toStdString().c_str(), _camera->getViewMatrix());
-//        shaderProgram_->setUniformValue(projectionMatrixName_.toStdString().c_str(), _camera->getProjectionMatrix());
-//    }
-
-//    int _location = shaderProgram_->attributeLocation("in_gridPosition");
-//    shaderProgram_->enableAttributeArray(_location);
-//    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 0, 3, sizeof(CGVertex));
-
-//    _location = shaderProgram_->attributeLocation("in_gridColor");
-//    shaderProgram_->enableAttributeArray(_location);
-//    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 3, 4, sizeof(CGVertex));
-
-//    _location = shaderProgram_->attributeLocation("in_gridNormal");
-//    shaderProgram_->enableAttributeArray(_location);
-//    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 7, 3, sizeof(CGVertex));
-
-
-
-
-
-QVector<CGVertex> CGCube::createVertices()
+CGCube::CGCube() : CGStdObject()
 {
     QVector<CGVertex> _vertices {
         CGVertex(QVector3D(-1.0f, -1.0f,  1.0f)),
@@ -268,11 +351,6 @@ QVector<CGVertex> CGCube::createVertices()
         CGVertex(QVector3D( 1.0f, -1.0f, -1.0f)),
     };
 
-    return _vertices;
-}
-
-QVector<GLuint> CGCube::createIndices()
-{
     QVector<GLuint> _indices {
         0, 1, 2,
         0, 2, 3,
@@ -293,7 +371,8 @@ QVector<GLuint> CGCube::createIndices()
         6, 7, 2
     };
 
-    return _indices;
+    setVertices(_vertices);
+    setIndices(_indices);
 }
 
 
@@ -303,273 +382,12 @@ QVector<GLuint> CGCube::createIndices()
 
 
 
-
-
-
-
-//CGPrimitives::CGPrimitives(const QWidget* parent)
-//{
-//    parent_ = parent;
-//}
-
-//void CGPrimitives::initialize()
-//{
-//    initializeOpenGLFunctions();
-
-//    shaderProgram_.addShaderFromSourceFile(QOpenGLShader::Vertex, ":shaders/sky_def_vert");
-//    shaderProgram_.addShaderFromSourceFile(QOpenGLShader::Fragment, ":shaders/sky_def_frag");
-//    shaderProgram_.link();
-
-
-
-//    glGenBuffers(1, &VBO_);
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-
-////    glGenV(1, &VBO_);
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-//}
-
-//const QOpenGLShaderProgram* CGPrimitives::getProgram()
-//{
-//    return &shaderProgram_;
-//}
-
-//int CGPrimitives::draw()
-//{
-//    return parent_->width();
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CGTriangle::CGTriangle()
-    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-      indexBuffer_(QOpenGLBuffer::IndexBuffer)
-{
-    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, 0.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, 0.0f)));
-    vertices_.push_back(CGVertex(QVector3D( 0.0f,  1.0f, 0.0f)));
-
-    indices_.push_back(0);
-    indices_.push_back(1);
-    indices_.push_back(2);
-}
-
-CGTriangle::CGTriangle(const CGVertex* vertices, size_t n)
-    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-      indexBuffer_(QOpenGLBuffer::IndexBuffer)
-{
-    for (size_t i = 0; i < 3 && i < n; ++i) {
-        vertices_.push_back(*vertices);
-    }
-
-    indices_.push_back(0);
-    indices_.push_back(1);
-    indices_.push_back(2);
-}
-
-CGTriangle::~CGTriangle()
-{
-
-}
-
-void CGTriangle::initialize()
-{
-    initializeOpenGLFunctions();
-
-    vertexBuffer_.create();
-    vertexBuffer_.bind();
-    vertexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    vertexBuffer_.allocate(vertices_.constData(), vertices_.size() * sizeof(CGVertex));
-    vertexBuffer_.release();
-
-    indexBuffer_.create();
-    indexBuffer_.bind();
-    indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
-    indexBuffer_.release();
-}
-
-void CGTriangle::setShaderProgram(QOpenGLShaderProgram* shaderProgram)
-{
-    shaderProgram_ = shaderProgram;
-}
-
-void CGTriangle::bind()
-{
-
-}
-
-void CGTriangle::draw()
-{
-    shaderProgram_->bind();
-    vertexBuffer_.bind(); //??
-    indexBuffer_.bind();
-
-    int _location = shaderProgram_->attributeLocation("in_gridPosition");
-    shaderProgram_->enableAttributeArray(_location);
-    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 0, 3, sizeof(CGVertex));
-
-
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//CGCube::CGCube()
-//    : vertexBuffer_(QOpenGLBuffer::VertexBuffer),
-//      indexBuffer_(QOpenGLBuffer::IndexBuffer)
-//{
-//    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, 1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, 1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, 1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, 1.0f)));
-
-//    vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, -1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D(-1.0f,  1.0f, -1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D( 1.0f,  1.0f, -1.0f)));
-//    vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, -1.0f)));
-
-//    indices_.push_back(0); indices_.push_back(1); indices_.push_back(2);
-//    indices_.push_back(0); indices_.push_back(2); indices_.push_back(3);
-
-//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(6);
-//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(7);
-
-//    indices_.push_back(1); indices_.push_back(2); indices_.push_back(5);
-//    indices_.push_back(5); indices_.push_back(6); indices_.push_back(2);
-
-//    indices_.push_back(0); indices_.push_back(3); indices_.push_back(4);
-//    indices_.push_back(4); indices_.push_back(7); indices_.push_back(3);
-
-//    indices_.push_back(0); indices_.push_back(1); indices_.push_back(5);
-//    indices_.push_back(4); indices_.push_back(5); indices_.push_back(0);
-
-//    indices_.push_back(2); indices_.push_back(3); indices_.push_back(7);
-//    indices_.push_back(6); indices_.push_back(7); indices_.push_back(2);
-//}
-
-//CGCube::~CGCube()
-//{
-
-//}
-
-//void CGCube::initialize()
-//{
-//    initializeOpenGLFunctions();
-
-//    vertexBuffer_.create();
-//    vertexBuffer_.bind();
-//    vertexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-//    vertexBuffer_.allocate(vertices_.constData(), vertices_.size() * sizeof(CGVertex));
-//    vertexBuffer_.release();
-
-//    indexBuffer_.create();
-//    indexBuffer_.bind();
-//    indexBuffer_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-//    indexBuffer_.allocate(indices_.constData(), indices_.size() * sizeof(GLuint));
-//    indexBuffer_.release();
-//}
-
-//void CGCube::setShaderProgram(QOpenGLShaderProgram* shaderProgram)
-//{
-//    shaderProgram_ = shaderProgram;
-//    _location = shaderProgram_->attributeLocation("in_gridPosition");
-//    shaderProgram_->enableAttributeArray(_location);
-//}
-
-//void CGCube::bind()
-//{
-
-//}
-
-//void CGCube::draw()
-//{
-//    shaderProgram_->bind();
-//    indexBuffer_.bind();
-//    vertexBuffer_.bind(); //??
-
-//    QMatrix4x4 _model;
-//    _model.setToIdentity();
-
-//    _model.translate(0.0f, 0.0f, -15.0f);
-//    _model.rotate(30.0f, QVector3D(3.0f, 3.0f, 3.0f));
-//    _model.scale(3.0f, 3.0f, 3.0f);
-
-
-
-//    CGCamera* _camera = CGCamera::getActiveCamera();
-//    QString dd = "u_modelViewProjectionMatrix";
-//    shaderProgram_->setUniformValue(dd.toStdString().c_str(),
-//                                    _camera->getProjectionMatrix() * _camera->getViewMatrix() * _model);
-
-
-//    shaderProgram_->setUniformValue("u_gridColor", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
-
-
-//    shaderProgram_->setAttributeBuffer(_location, GL_FLOAT, 0, 3, sizeof(CGVertex));
-
-//    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
-
-//    vertexBuffer_.release();
-//    indexBuffer_.release();
-//    shaderProgram_->release();
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//vertices_.push_back(CGVertex(QVector3D(-1.0f, -1.0f, 0.0f)));
+//vertices_.push_back(CGVertex(QVector3D( 1.0f, -1.0f, 0.0f)));
+//vertices_.push_back(CGVertex(QVector3D( 0.0f,  1.0f, 0.0f)));
+
+//indices_.push_back(0);
+//indices_.push_back(1);
+//indices_.push_back(2);
 
 

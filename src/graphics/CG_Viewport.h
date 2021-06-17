@@ -24,7 +24,7 @@ class Viewport : public QOpenGLWidget, public QOpenGLFunctions
 //    CGViewportCamera* viewportCamera_;
 //    CGCamera* camera_;
     CGDynamicCamera* dynamicCamera_;
-    CGTriangle triangle_;
+//    CGTriangle triangle_;
     CGCube cube_;
     CGCube cube_2_;
 

@@ -15,6 +15,8 @@ public:
     CGVertex(const QVector3D& position, const QVector4D& color);
     CGVertex(const QVector3D& position, const QVector4D& color, const QVector3D& normal);
 
+    ~CGVertex();
+
     QVector3D position;
     QVector4D color;
     QVector3D normal;

@@ -130,6 +130,8 @@ class CGDynamicCamera : public CGCamera
 
 public:
     CGDynamicCamera();
+    CGDynamicCamera(const CGDynamicCamera& other);
+    ~CGDynamicCamera();
 
     void move(CGE::MovementDirection movementDirection);
     void lookAt(int x, int y);

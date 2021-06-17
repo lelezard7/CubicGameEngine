@@ -12,10 +12,11 @@
 #include "CG_Vertex.h"
 
 
-
-
 class CGObject : protected QOpenGLFunctions
 {
+    QOpenGLBuffer::UsagePattern vbo_usagePattern_;
+    QOpenGLBuffer::UsagePattern ebo_usagePattern_;
+
     QOpenGLBuffer vertexBuffer_;
     QOpenGLBuffer indexBuffer_;
 
@@ -26,19 +27,27 @@ class CGObject : protected QOpenGLFunctions
 
     QVector3D position_;
     QVector3D size_;
-    QVector3D rotation_;
-    float rotationAngle_;
+    CGPair<float, QVector3D> rotation_;
 
 public:
     CGObject();
+    CGObject(const CGObject& other);
+    virtual ~CGObject();
 
-    void create();
+    int initialize();
+
+    bool setVertices(QVector<CGVertex> vertices);
+    bool setIndices(QVector<GLuint> indices);
 
     QVector<CGVertex> getVertices() const;
     QVector<GLuint> getIndices() const;
 
     int verticesCount() const;
     int indicesCount() const;
+
+    void setUsagePattern(QOpenGLBuffer::Type buffer, QOpenGLBuffer::UsagePattern usagePattern);
+    QOpenGLBuffer::UsagePattern getVboUsagePattern() const;
+    QOpenGLBuffer::UsagePattern getEboUsagePattern() const;
 
     QMatrix4x4 getModelMatrix() const;
 
@@ -50,155 +59,55 @@ public:
     void setSize(const QVector3D& size);
     QVector3D getSize() const;
 
-    void rotate(float angle, float x, float y, float z);
-    void rotate(float angle, const QVector3D& vector);
+    void setRotation(float angle, float x, float y, float z);
+    void setRotation(float angle, const QVector3D& vector);
     QVector3D getRotationAxis() const;
     float getRotationAngle() const;
 
-    void bindVertexBuffer();
-    void bindIndexBuffer();
+    bool bind();
+    void release();
 
-    void releaseVertexBuffer();
-    void releaseIndexBuffer();
+    const CGObject& operator=(const CGObject& other);
 
 private:
     void applyTransformation();
 
-protected:
-    virtual QVector<CGVertex> createVertices() = 0;
-    virtual QVector<GLuint> createIndices() = 0;
-
 };
+
 
 class CGStdObject : public CGObject
 {
     CGStdShaderProgram* shaderProgram_;
 
 public:
-
-
     CGStdObject();
+    CGStdObject(const CGStdObject& other);
+    virtual ~CGStdObject();
 
     void setShaderProgram(CGStdShaderProgram* shaderProgram);
     CGStdShaderProgram* getShaderProgram() const;
 
-    void bind();
+    bool bind();
     void release();
-    virtual void draw();
+
+
+
+
+
+    virtual int draw();
 
 };
+
+
+
+
 
 
 class CGCube : public CGStdObject
 {
-    QVector<CGVertex> createVertices() override;
-    QVector<GLuint> createIndices() override;
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-//class CGPrimitives : public QOpenGLFunctions
-//{
-//    const QWidget* parent_;
-
-//    QOpenGLShaderProgram shaderProgram_;
-//    GLuint VBO_;
-//    GLuint VAO_;
-//    GLuint EBO_;
-
-//public:
-//    CGPrimitives(const QWidget* parent);
-
-//    void initialize();
-//    const QOpenGLShaderProgram* getProgram();
-//    int draw();
-
-//};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class CGTriangle : public QOpenGLFunctions
-{
-    QOpenGLShaderProgram* shaderProgram_;
-
-    QVector<CGVertex> vertices_;
-    QVector<GLuint> indices_;
-
-    QOpenGLBuffer vertexBuffer_;
-    QOpenGLBuffer indexBuffer_;
-
 public:
-    CGTriangle();
-    CGTriangle(const CGVertex* vertices, size_t n);
-    ~CGTriangle();
-
-    void initialize();
-    void setShaderProgram(QOpenGLShaderProgram* shaderProgram);
-    void bind();
-    void draw();
-
+    CGCube();
 };
-
-//class CGCube : public QOpenGLFunctions
-//{
-//    QOpenGLShaderProgram* shaderProgram_;
-
-//    QVector<CGVertex> vertices_;
-//    QVector<GLuint> indices_;
-
-//    QOpenGLBuffer vertexBuffer_;
-//    QOpenGLBuffer indexBuffer_;
-
-//    int _location;
-
-
-//public:
-//    CGCube();
-//    ~CGCube();
-
-//    void initialize();
-//    void setShaderProgram(QOpenGLShaderProgram* shaderProgram);
-//    void bind();
-//    void draw();
-
-//};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif

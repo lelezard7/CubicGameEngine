@@ -32,30 +32,32 @@ void Viewport::initializeGL()
     shaderProgram_->link();
     shaderProgram_->bind();
 
+    shaderProgram_->addVariableData(CG_SHADER_U_COLOR, "u_gridColor", true, true);
     shaderProgram_->addVariableData(CG_SHADER_A_VERTICES, "in_gridPosition", false, false);
     shaderProgram_->addVariableData(CG_SHADER_U_TRANSFORMATION_MATRIX, "u_transformationMatrix", true, false);
 
-
-//    shaderProgram_->addType(CG_SHADER_PROGRAM_COLORS, "u_gridColor", true);
+    QVector4D _color(0.0f, 1.0f, 1.0f, 1.0f);
+    shaderProgram_->setVector(CG_SHADER_U_COLOR, &_color, CGStdShaderProgram::PERMANENT_STORAGE);
+    shaderProgram_->CGShaderProgram::initializeVariables();
 
 
     scene_->initialize();
-    triangle_.initialize();
-    cube_.create();
-    cube_2_.create();
+//    triangle_.initialize();
+    cube_.initialize();
+    cube_2_.initialize();
 
     cube_.setPosition(0.0f, 0.0f, -15.0f);
     cube_.setSize(5.0f, 2.0f, 1.0f);
-    cube_.rotate(30.0f, 0.0f, 0.0f, 1.0f);
+    cube_.setRotation(30.0f, 0.0f, 0.0f, 1.0f);
 
     cube_2_.setPosition(0.0f, 0.0f, 15.0f);
     cube_2_.setSize(1.0f, 1.0f, 1.0f);
-    cube_2_.rotate(0.0f, 0.0f, 0.0f, 0.0f);
+    cube_2_.setRotation(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 
     scene_->setShaderProgramGrid(shaderProgram_);
-    triangle_.setShaderProgram(shaderProgram_);
+//    triangle_.setShaderProgram(shaderProgram_);
     cube_.setShaderProgram(shaderProgram_);
     cube_2_.setShaderProgram(shaderProgram_);
 
@@ -80,6 +82,11 @@ void Viewport::initializeGL()
 
 
     glEnable(GL_DEPTH_TEST);
+
+
+    CGStdShaderProgram gg;
+    CGStdShaderProgram dd(gg);
+
 //    glEnable(GL_CULL_FACE);
 
 

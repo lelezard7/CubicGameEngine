@@ -23,6 +23,12 @@
 #define CG_SHADER_U_COLOR                   0x00100000
 
 
+//TODO: Тут все плохо. Переделать все -_- !
+//Класс CGShaderProgram не удобен в использовании в целом,
+//а класс CGStdShaderProgram и подавно один большой костыль на теле общества.
+//Делал их как временную затычку на время изучения OpenGL.
+
+
 class CGShaderProgram : public QOpenGLShaderProgram
 {
 protected:
@@ -57,7 +63,7 @@ public:
     int initializeVariables();
     int refreshVariables();
 
-    void operator=(const CGShaderProgram& other);
+    const CGShaderProgram& operator=(const CGShaderProgram& other);
 
 protected:
     const CGVariableData* getVariableData(unsigned int mask) const;
@@ -70,23 +76,49 @@ protected:
 
 class CGStdShaderProgram : public CGShaderProgram
 {
-    CGPair<unsigned int, const QMatrix4x4*> matrix_;
-    CGPair<unsigned int, const QVector3D*> vector3D_;
-    CGPair<unsigned int, const QVector4D*> vector4D_;
+public:
+    enum StorageType
+    {
+        SHORT_TERM_STORAGE,
+        PERMANENT_STORAGE
+    };
+
+protected:
+    typedef CGPair<unsigned int, const QMatrix4x4*> AnonMatrix;
+    typedef CGPair<unsigned int, const QVector3D*> AnonVector3D;
+    typedef CGPair<unsigned int, const QVector4D*> AnonVector4D;
+
+    struct Storage
+    {
+        Storage();
+        Storage(const Storage& other);
+
+        AnonMatrix matrix_;
+        AnonVector3D vector3D_;
+        AnonVector4D vector4D_;
+    };
+
+private:
+    Storage shortTermStorage_;
+    Storage permanentStorage_;
 
 public:
     CGStdShaderProgram();
     CGStdShaderProgram(const CGStdShaderProgram& other);
     virtual ~CGStdShaderProgram();
 
-    int setMatrix(unsigned int mask, const QMatrix4x4* matrix);
-    int setVector(unsigned int mask, const QVector3D* vector);
-    int setVector(unsigned int mask, const QVector4D* vector);
+    int setMatrix(unsigned int mask, const QMatrix4x4* matrix, StorageType storageType);
+    int setVector(unsigned int mask, const QVector3D* vector, StorageType storageType);
+    int setVector(unsigned int mask, const QVector4D* vector, StorageType storageType);
 
 protected:
-    CGPair<unsigned int, const QMatrix4x4*> getMatrix() const;
-    CGPair<unsigned int, const QVector3D*> getVector3D() const;
-    CGPair<unsigned int, const QVector4D*> getVector4D() const;
+    AnonMatrix getMatrix(StorageType storageType) const;
+    AnonVector3D getVector3D(StorageType storageType) const;
+    AnonVector4D getVector4D(StorageType storageType) const;
+
+    void removePermanentMatrix();
+    void removePermanentVector3D();
+    void removePermanentVector4D();
 
     int initializeVariables(const QVector<CGVariableData>& variablesData) override;
     int refreshVariables(const QVector<CGVariableData>& variablesData) override;

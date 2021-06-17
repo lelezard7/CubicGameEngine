@@ -26,7 +26,7 @@ void CGScene::initialize()
 {
     sky_->initialize();
 
-    grid_->create();
+    int a = grid_->initialize();
     grid_->setPosition(0.0f, 0.0f, -15.0f);
     grid_->setSize(20000.0f, 20000.0f, 20000.0f);
 
@@ -72,10 +72,10 @@ void CGSky::draw()
 
 // CGGrid
 
-QVector<CGVertex> CGGrid::createVertices()
+
+CGGrid::CGGrid() : CGStdObject()
 {
     QVector<CGVertex> _vertices;
-
     for (float i = -0.9f; i <= 1.0f; i += 0.0001f) {
         _vertices.push_back(CGVertex(QVector3D(i, 0.0f,  1.0f)));
         _vertices.push_back(CGVertex(QVector3D(i, 0.0f, -1.0f)));
@@ -84,34 +84,29 @@ QVector<CGVertex> CGGrid::createVertices()
         _vertices.push_back(CGVertex(QVector3D( 1.0f, 0.0f, i)));
     }
 
-    return _vertices;
-}
-
-QVector<GLuint> CGGrid::createIndices()
-{
     QVector<GLuint> _indices;
-
-    for (int i = 0; i < verticesCount(); ++i) {
+    for (int i = 0; i < _vertices.size(); ++i) {
         _indices.push_back(i);
     }
 
-    return _indices;
+    setVertices(_vertices);
+    setIndices(_indices);
 }
 
-void CGGrid::draw()
+int CGGrid::draw()
 {
     CGCamera* _camera = CGCamera::getActiveCamera();
 
-    QMatrix4x4 ere = _camera->getProjectionMatrix() * _camera->getViewMatrix() * getModelMatrix();
+    if (!_camera)
+        return -1;
 
     CGStdShaderProgram* _shaderProgram = getShaderProgram();
-
-    _shaderProgram->setMatrix(CG_SHADER_U_TRANSFORMATION_MATRIX, &ere);
-    _shaderProgram->CGShaderProgram::refreshVariables();
-
-    _shaderProgram->setUniformValue("u_gridColor", QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
+    QMatrix4x4 _transformationMatrix = _camera->getProjectionMatrix() * _camera->getViewMatrix() * getModelMatrix();
+    _shaderProgram->setMatrix(CG_SHADER_U_TRANSFORMATION_MATRIX, &_transformationMatrix,
+                              CGStdShaderProgram::SHORT_TERM_STORAGE);
 
     glDrawElements(GL_LINES, indicesCount(), GL_UNSIGNED_INT, nullptr);
+    return 0;
 }
 
 

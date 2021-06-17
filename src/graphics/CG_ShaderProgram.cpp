@@ -30,10 +30,7 @@ CGShaderProgram::CGShaderProgram(const CGShaderProgram& other)
     variablesData_ = other.variablesData_;
 }
 
-CGShaderProgram::~CGShaderProgram()
-{
-    variablesData_.clear();
-}
+CGShaderProgram::~CGShaderProgram() {}
 
 bool CGShaderProgram::addVariableData(unsigned int mask, QString name, bool isUniform, bool isInit)
 {
@@ -135,9 +132,11 @@ int CGShaderProgram::refreshVariables()
     return refreshVariables(variablesData_);
 }
 
-void CGShaderProgram::operator=(const CGShaderProgram& other)
+const CGShaderProgram& CGShaderProgram::operator=(const CGShaderProgram& other)
 {
     variablesData_ = other.variablesData_;
+
+    return *this;
 }
 
 const CGShaderProgram::CGVariableData* CGShaderProgram::getVariableData(unsigned int mask) const
@@ -156,88 +155,142 @@ const CGShaderProgram::CGVariableData* CGShaderProgram::getVariableData(unsigned
 
 
 
-CGStdShaderProgram::CGStdShaderProgram()
+CGStdShaderProgram::Storage::Storage()
     : matrix_(0, nullptr),
       vector3D_(0, nullptr),
       vector4D_(0, nullptr) {}
 
-CGStdShaderProgram::CGStdShaderProgram(const CGStdShaderProgram& other)
-    : matrix_(0, nullptr),
-      vector3D_(0, nullptr),
-      vector4D_(0, nullptr) {}
+CGStdShaderProgram::Storage::Storage(const CGStdShaderProgram::Storage& other)
+    : matrix_(other.matrix_),
+      vector3D_(other.vector3D_),
+      vector4D_(other.vector4D_) {}
+
+CGStdShaderProgram::CGStdShaderProgram() : CGShaderProgram() {}
+
+CGStdShaderProgram::CGStdShaderProgram(const CGStdShaderProgram& other) : CGShaderProgram(other)
+{
+    permanentStorage_ = other.permanentStorage_;
+}
 
 CGStdShaderProgram::~CGStdShaderProgram() {}
 
-int CGStdShaderProgram::setMatrix(unsigned int mask, const QMatrix4x4* matrix)
+int CGStdShaderProgram::setMatrix(unsigned int mask, const QMatrix4x4* matrix, StorageType storageType)
 {
-    if (mask <= 0)
+    if (mask <= 0 || !matrix)
         return -1;
 
-    matrix_.first = mask;
-    matrix_.second = matrix;
+    if (storageType == PERMANENT_STORAGE) {
+        permanentStorage_.matrix_.first = mask;
+        permanentStorage_.matrix_.second = matrix;
+        return 0;
+    }
+
+    shortTermStorage_.matrix_.first = mask;
+    shortTermStorage_.matrix_.second = matrix;
 
     int _errCode = CGShaderProgram::refreshVariables();
 
-    matrix_.first = 0;
-    matrix_.second = nullptr;
+    shortTermStorage_.matrix_.first = 0;
+    shortTermStorage_.matrix_.second = nullptr;
 
     return _errCode;
 }
 
-int CGStdShaderProgram::setVector(unsigned int mask, const QVector3D* vector)
+int CGStdShaderProgram::setVector(unsigned int mask, const QVector3D* vector, StorageType storageType)
 {
-    if (mask <= 0)
+    if (mask <= 0 || !vector)
         return -1;
 
-    vector3D_.first = mask;
-    vector3D_.second = vector;
+    if (storageType == PERMANENT_STORAGE) {
+        permanentStorage_.vector3D_.first = mask;
+        permanentStorage_.vector3D_.second = vector;
+        return 0;
+    }
+
+    shortTermStorage_.vector3D_.first = mask;
+    shortTermStorage_.vector3D_.second = vector;
 
     int _errCode = CGShaderProgram::refreshVariables();
 
-    vector3D_.first = 0;
-    vector3D_.second = nullptr;
+    shortTermStorage_.vector3D_.first = 0;
+    shortTermStorage_.vector3D_.second = nullptr;
 
     return _errCode;
 }
 
-int CGStdShaderProgram::setVector(unsigned int mask, const QVector4D* vector)
+int CGStdShaderProgram::setVector(unsigned int mask, const QVector4D* vector, StorageType storageType)
 {
-    if (mask <= 0)
+    if (mask <= 0 || !vector)
         return -1;
 
-    vector4D_.first = mask;
-    vector4D_.second = vector;
+    if (storageType == PERMANENT_STORAGE) {
+        permanentStorage_.vector4D_.first = mask;
+        permanentStorage_.vector4D_.second = vector;
+        return 0;
+    }
+
+    shortTermStorage_.vector4D_.first = mask;
+    shortTermStorage_.vector4D_.second = vector;
 
     int _errCode = CGShaderProgram::refreshVariables();
 
-    vector4D_.first = 0;
-    vector4D_.second = nullptr;
+    shortTermStorage_.vector4D_.first = 0;
+    shortTermStorage_.vector4D_.second = nullptr;
 
     return _errCode;
 }
 
-CGPair<unsigned int, const QMatrix4x4*> CGStdShaderProgram::getMatrix() const
+CGStdShaderProgram::AnonMatrix CGStdShaderProgram::getMatrix(StorageType storageType) const
 {
-    return matrix_;
+    if (storageType == SHORT_TERM_STORAGE)
+        return shortTermStorage_.matrix_;
+
+    return permanentStorage_.matrix_;
 }
 
-CGPair<unsigned int, const QVector3D*> CGStdShaderProgram::getVector3D() const
+CGStdShaderProgram::AnonVector3D CGStdShaderProgram::getVector3D(StorageType storageType) const
 {
-    return vector3D_;
+    if (storageType == SHORT_TERM_STORAGE)
+        return shortTermStorage_.vector3D_;
+
+    return permanentStorage_.vector3D_;
 }
 
-CGPair<unsigned int, const QVector4D*> CGStdShaderProgram::getVector4D() const
+CGStdShaderProgram::AnonVector4D CGStdShaderProgram::getVector4D(StorageType storageType) const
 {
-    return vector4D_;
+    if (storageType == SHORT_TERM_STORAGE)
+        return shortTermStorage_.vector4D_;
+
+    return permanentStorage_.vector4D_;
+}
+
+void CGStdShaderProgram::removePermanentMatrix()
+{
+    permanentStorage_.matrix_.first = 0;
+    permanentStorage_.matrix_.second = nullptr;
+}
+
+void CGStdShaderProgram::removePermanentVector3D()
+{
+    permanentStorage_.vector3D_.first = 0;
+    permanentStorage_.vector3D_.second = nullptr;
+}
+
+void CGStdShaderProgram::removePermanentVector4D()
+{
+    permanentStorage_.vector4D_.first = 0;
+    permanentStorage_.vector4D_.second = nullptr;
 }
 
 int CGStdShaderProgram::initializeVariables(const QVector<CGVariableData>& variablesData)
 {
     for (int i = 0; i < variablesData.size(); ++i) {
-        if (variablesData[i].mask == vector4D_.first &&
-                vector4D_.first == CG_SHADER_U_COLOR &&
-                vector4D_.second) {
-            setUniformValue(variablesData[i].location, *vector4D_.second);
+        if (variablesData[i].mask == permanentStorage_.vector4D_.first &&
+                permanentStorage_.vector4D_.first == CG_SHADER_U_COLOR &&
+                permanentStorage_.vector4D_.second) {
+
+            setUniformValue(variablesData[i].location, *permanentStorage_.vector4D_.second);
+            removePermanentVector4D();
             continue;
         }
     }
@@ -248,18 +301,21 @@ int CGStdShaderProgram::initializeVariables(const QVector<CGVariableData>& varia
 int CGStdShaderProgram::refreshVariables(const QVector<CGVariableData>& variablesData)
 {
     for (int i = 0; i < variablesData.size(); ++i) {
-        if (variablesData[i].mask == matrix_.first && matrix_.second) {
-            setUniformValue(variablesData[i].location, *matrix_.second);
+        if (variablesData[i].mask == shortTermStorage_.matrix_.first &&
+                shortTermStorage_.matrix_.second) {
+            setUniformValue(variablesData[i].location, *shortTermStorage_.matrix_.second);
             continue;
         }
 
-        if (variablesData[i].mask == vector3D_.first && vector3D_.second) {
-            setUniformValue(variablesData[i].location, *vector3D_.second);
+        if (variablesData[i].mask == shortTermStorage_.vector3D_.first &&
+                shortTermStorage_.vector3D_.second) {
+            setUniformValue(variablesData[i].location, *shortTermStorage_.vector3D_.second);
             continue;
         }
 
-        if (variablesData[i].mask == vector4D_.first && vector4D_.second) {
-            setUniformValue(variablesData[i].location, *vector4D_.second);
+        if (variablesData[i].mask == shortTermStorage_.vector4D_.first &&
+                shortTermStorage_.vector4D_.second) {
+            setUniformValue(variablesData[i].location, *shortTermStorage_.vector4D_.second);
             continue;
         }
 
@@ -281,3 +337,5 @@ int CGStdShaderProgram::refreshVariables(const QVector<CGVariableData>& variable
 
     return 0;
 }
+
+

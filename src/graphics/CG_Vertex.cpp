@@ -23,6 +23,8 @@ CGVertex::CGVertex(const QVector3D& position, const QVector4D& color, const QVec
       color(color),
       normal(normal) {}
 
+CGVertex::~CGVertex() {}
+
 void CGVertex::operator=(const CGVertex& other)
 {
     position = other.position;

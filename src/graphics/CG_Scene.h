@@ -49,11 +49,10 @@ public:
 
 class CGGrid : public CGStdObject
 {
-    QVector<CGVertex> createVertices() override;
-    QVector<GLuint> createIndices() override;
-
 public:
-    void draw() override;
+    CGGrid();
+
+    int draw() override;
 };
 
 //class CGGrid : public QOpenGLFunctions
